@@ -1,5 +1,6 @@
 import 'package:flt_hc_hud/flt_hc_hud.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,6 +21,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: HCHud(
+        padding: EdgeInsets.all(15),
+        hSpacing: 10,
+        borderRadius: BorderRadius.circular(10),
         child: Page(_platformVersion),
       ),
     );
@@ -75,21 +79,28 @@ class Page extends StatelessWidget {
     //   ),
     // );
 
-    // HCHud.of(context)?.showLoading(text: '', enable: false);
+    HCHud.of(context)?.showLoading(
+      enable: false,
+      hudView: SizedBox(
+        width: 40,
+        height: 40,
+        child: SpinKitRing(color: Colors.black, lineWidth: 1),
+      ),
+    );
 
 //     await Future.delayed(Duration(seconds: 2));
 //    HCHud.of(context).showErrorAndDismiss(text: '加载数据异常');
 //     HCHud.of(context)?.dismiss(animated: false);
 
-    HCHud.of(context)?.showCustomHudViewAndDismiss(
-      animated: true,
-      y: y,
-      hudView: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Image.asset('images/list.png'),
-      ),
-    );
+    // HCHud.of(context)?.showCustomHudViewAndDismiss(
+    //   animated: true,
+    //   y: y,
+    //   hudView: Container(
+    //     width: MediaQuery.of(context).size.width,
+    //     height: MediaQuery.of(context).size.height,
+    //     child: Image.asset('images/list.png'),
+    //   ),
+    // );
   }
 }
 

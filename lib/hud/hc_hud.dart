@@ -29,6 +29,9 @@ class HCHud extends StatefulWidget {
   final Color? textColor;
   final double? width;
   final double? height;
+  final EdgeInsetsGeometry? padding;
+  final double? hSpacing;
+  final BorderRadiusGeometry? borderRadius;
 
   HCHud({
     required this.child,
@@ -37,6 +40,9 @@ class HCHud extends StatefulWidget {
     this.textColor,
     this.width,
     this.height,
+    this.padding,
+    this.hSpacing,
+    this.borderRadius,
   });
 
   static _HCHudState? of(BuildContext? context) {
@@ -75,6 +81,7 @@ class _HCHudState extends State<HCHud> with SingleTickerProviderStateMixin {
   bool _enable = true;
 
   Widget? _customHudView;
+  Widget? _loadingHudView;
 
   bool _animated = true;
 
@@ -257,8 +264,10 @@ class _HCHudState extends State<HCHud> with SingleTickerProviderStateMixin {
       double? y,
       double? width,
       double? height,
+      Widget? hudView,
       bool enable = true,
       bool? animated}) {
+    _loadingHudView = hudView;
     this.show(HCHudType.loading, text,
         x: x,
         y: y,
@@ -420,14 +429,15 @@ class _HCHudState extends State<HCHud> with SingleTickerProviderStateMixin {
     const double kIconSize = 30;
     switch (_progressType) {
       case HCHudType.loading:
-        var sizeBox = SizedBox(
-            width: kIconSize,
-            height: kIconSize,
-            child: HCActivityIndicator(
-              animating: true,
-              radius: 10,
-              color: _foreColor,
-            ));
+        var sizeBox = _loadingHudView ??
+            SizedBox(
+                width: kIconSize,
+                height: kIconSize,
+                child: HCActivityIndicator(
+                  animating: true,
+                  radius: 10,
+                  color: _foreColor,
+                ));
         return _createHudView(sizeBox);
       case HCHudType.error:
         return _createHudView(
@@ -455,10 +465,10 @@ class _HCHudState extends State<HCHud> with SingleTickerProviderStateMixin {
         decoration: BoxDecoration(
             color: _bgColor,
             /*Color.fromARGB(255, 33, 33, 33)*/
-            borderRadius: BorderRadius.circular(20)),
+            borderRadius: widget.borderRadius ?? BorderRadius.circular(20)),
         constraints: BoxConstraints(minHeight: 50, minWidth: 50),
         child: Padding(
-          padding: EdgeInsets.all(10),
+          padding: widget.padding ?? EdgeInsets.all(10),
           child: _createHudViewChild(child),
         ),
       ),
@@ -467,23 +477,19 @@ class _HCHudState extends State<HCHud> with SingleTickerProviderStateMixin {
 
   Widget _createHudViewChild(Widget child) {
     if (_progressType == HCHudType.text) {
-      return Container(
-          padding: EdgeInsets.all(6),
-          child: Text(_text,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: _textColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                  decoration: TextDecoration.none)));
+      return Text(_text,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: _textColor,
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+              decoration: TextDecoration.none));
     } else if (_text.isNotEmpty) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(6),
-            child: child,
-          ),
+          child,
+          SizedBox(height: widget.hSpacing ?? 6),
           Container(
             child: Text(_text,
                 textAlign: TextAlign.center,
@@ -496,10 +502,7 @@ class _HCHudState extends State<HCHud> with SingleTickerProviderStateMixin {
         ],
       );
     } else {
-      return Container(
-        padding: EdgeInsets.all(6),
-        child: child,
-      );
+      return child;
     }
   }
 
