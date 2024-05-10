@@ -207,6 +207,7 @@ class _HCHudState extends State<HCHud> with SingleTickerProviderStateMixin {
     if (_disposed) {
       return;
     }
+    _animation?.reset();
     _setDefSize();
     _isVisible = true;
     _enable = enable;
@@ -223,7 +224,6 @@ class _HCHudState extends State<HCHud> with SingleTickerProviderStateMixin {
           if (y != null) {
             _y = y;
             if (_animated) {
-              _animation?.reset();
               _animation?.forward();
             } else {
               _opacity = 1.0;
@@ -244,7 +244,6 @@ class _HCHudState extends State<HCHud> with SingleTickerProviderStateMixin {
       if (y != null) {
         _y = y;
         if (_animated) {
-          _animation?.reset();
           _animation?.forward();
         } else {
           _opacity = 1.0;
@@ -531,11 +530,11 @@ class _HCHudState extends State<HCHud> with SingleTickerProviderStateMixin {
       if (_disposed) {
         return;
       }
+      _animation?.reset();
       double hudH = _globalKey.currentContext?.size?.height ?? 0;
       _y = (widgetH - hudH) * 0.5;
       if (_isVisible) {
         if (_animated) {
-          _animation?.reset();
           _animation?.forward();
         } else {
           _opacity = 1.0;
