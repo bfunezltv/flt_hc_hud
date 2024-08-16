@@ -22,6 +22,7 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
+    namespace "com.example.flt_hc_hud"
     compileSdkVersion 31
 
     defaultConfig {
